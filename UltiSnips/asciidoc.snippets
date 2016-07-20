@@ -1,0 +1,1250 @@
+priority -50
+
+global !p
+
+import sys
+
+
+def complete(tab, opts):
+    """
+    get options that start with tab
+
+    :param tab: query string
+    :param opts: list that needs to be completed
+
+    :return: a string that start with tab
+    """
+    items_to_display = 10
+    items_displayed = items_to_display
+    msg = "({0})"
+
+    if tab:
+        opts = [m[len(tab):] for m in opts if m.startswith(tab)]
+
+    if len(opts) == 1:
+        return opts[0]
+
+    if not len(opts):
+        msg = "{0}"
+
+    if len(opts) < items_to_display:
+        items_displayed = len(opts)
+
+    if len(opts) == 0:
+        items = ""
+    else:
+        items = (
+            str(items_displayed) +
+            "/" +
+            str(len(opts)) +
+            " item(s): "
+        )
+
+    return msg.format(
+        items +
+        "|".join(opts[:items_to_display])
+    )
+
+
+def separator_for_format(tab):
+    if not tab:
+        return ''
+
+    if tab[:1] == 'd':
+        return ':'
+    elif tab[:1] == 'c':
+        return ','
+    else:
+        return '|'
+
+
+def separator_for_first_col_of_table_row(tab):
+    if not tab:
+        return ''
+
+    if tab == '|':
+        return tab
+    else:
+        return ''
+
+
+def default_alignment_for_table_row(tab, prefix=''):
+    if not tab:
+        return ''
+
+    if tab == '|':
+        # return '%s%s' % (prefix, tab)
+        return prefix
+    else:
+        return ''
+
+
+def get_options_for_completion(listtype):
+    return {
+        'Admonition': [
+            'NOTE',
+            'TIP',
+            'IMPORTANT',
+            'WARNING',
+            'CAUTION',
+        ],
+        'SourceLanguage': [
+            'as3',
+            'actionscript3',
+            'as',
+            'actionscript',
+            'mxml',
+            'gap',
+            'mathematica',
+            'mma',
+            'nb',
+            'mupad',
+            'at',
+            'ambienttalk',
+            'ambienttalk/2',
+            'apl',
+            'c-objdump',
+            'ca65',
+            'cpp-objdump',
+            'c++-objdumb',
+            'cxx-objdump',
+            'd-objdump',
+            'gas',
+            'asm',
+            'llvm',
+            'nasm',
+            'objdump-nasm',
+            'objdump',
+            'autoit',
+            'ahk',
+            'autohotkey',
+            'blitzbasic',
+            'b3d',
+            'bplus',
+            'blitzmax',
+            'bmax',
+            'cbmbas',
+            'monkey',
+            'qbasic',
+            'basic',
+            'abap',
+            'cobolfree',
+            'cobol',
+            'gooddata-cl',
+            'maql',
+            'openedge',
+            'abl',
+            'progress',
+            'c',
+            'cpp',
+            'c++',
+            'clay',
+            'cuda',
+            'cu',
+            'ec',
+            'mql',
+            'mq4',
+            'mq5',
+            'mql4',
+            'mql5',
+            'nesc',
+            'pike',
+            'swig',
+            'vala',
+            'vapi',
+            'chapel',
+            'chpl',
+            'apacheconf',
+            'aconf',
+            'apache',
+            'cfengine3',
+            'cf3',
+            'docker',
+            'dockerfile',
+            'ini',
+            'cfg',
+            'dosini',
+            'kconfig',
+            'menuconfig',
+            'linux-config',
+            'kernel-config',
+            'lighty',
+            'lighttpd',
+            'nginx',
+            'properties',
+            'jproperties',
+            'registry',
+            'squidconf',
+            'squid.conf',
+            'squid',
+            'pypylog',
+            'pypy',
+            'vctreestatus',
+            'css',
+            'sass',
+            'scss',
+            'croc',
+            'd',
+            'minid',
+            'smali',
+            'jsonld',
+            'json-ld',
+            'json',
+            'yaml',
+            'dpatch',
+            'diff',
+            'udiff',
+            'boo',
+            'aspx-cs',
+            'csharp',
+            'c#',
+            'fsharp',
+            'nemerle',
+            'aspx-vb',
+            'vb.net',
+            'vbnet',
+            'alloy',
+            'bro',
+            'mscgen',
+            'msc',
+            'pan',
+            'protobuf',
+            'proto',
+            'puppet',
+            'rsl',
+            'vgl',
+            'dylan-console',
+            'dylan-repl',
+            'dylan',
+            'dylan-lid',
+            'lid',
+            'ecl',
+            'eiffel',
+            'iex',
+            'elixir',
+            'ex',
+            'exs',
+            'erlang',
+            'erl',
+            'befunge',
+            'brainfuck',
+            'bf',
+            'redcode',
+            'factor',
+            'fan',
+            'felix',
+            'flx',
+            'fortran',
+            'foxpro',
+            'vfp',
+            'clipper',
+            'xbase',
+            'go',
+            'cypher',
+            'asy',
+            'asymptote',
+            'glsl',
+            'gnuplot',
+            'postscript',
+            'postscr',
+            'pov',
+            'agda',
+            'cryptol',
+            'cry',
+            'haskell',
+            'hs',
+            'idris',
+            'idr',
+            'koka',
+            'lagda',
+            'literate-agda',
+            'lcry',
+            'literate-cryptol',
+            'lcryptol',
+            'lhs',
+            'literate-haskell',
+            'lhaskell',
+            'lidr',
+            'literate-idris',
+            'lidris',
+            'hx',
+            'haxe',
+            'hxsl',
+            'haxeml',
+            'hxml',
+            'systemverilog',
+            'sv',
+            'verilog',
+            'v',
+            'vhdl',
+            'dtd',
+            'haml',
+            'html',
+            'jade',
+            'scaml',
+            'xml',
+            'xslt',
+            'idl',
+            'igor',
+            'igorpro',
+            'limbo',
+            'control',
+            'debcontrol',
+            'nsis',
+            'nsi',
+            'nsh',
+            'spec',
+            'sourceslist',
+            'sources.list',
+            'debsources',
+            'inform6',
+            'i6',
+            'i6t',
+            'inform7',
+            'i7',
+            'tads3',
+            'io',
+            'coffee-script',
+            'coffeescript',
+            'coffee',
+            'dart',
+            'js',
+            'javascript',
+            'kal',
+            'lasso',
+            'lassoscript',
+            'live-script',
+            'livescript',
+            'mask',
+            'objective-j',
+            'objectivej',
+            'obj-j',
+            'objj',
+            'ts',
+            'jlcon',
+            'julia',
+            'jl',
+            'aspectj',
+            'ceylon',
+            'clojure',
+            'clj',
+            'clojurescript',
+            'cljs',
+            'golo',
+            'gosu',
+            'gst',
+            'groovy',
+            'ioke',
+            'ik',
+            'jasmin',
+            'jasminxt',
+            'java',
+            'kotlin',
+            'pig',
+            'scala',
+            'xtend',
+            'common-lisp',
+            'cl',
+            'lisp',
+            'elisp',
+            'emacs',
+            'emacs-lisp',
+            'hylang',
+            'newlisp',
+            'racket',
+            'rkt',
+            'scheme',
+            'scm',
+            'basemake',
+            'cmake',
+            'make',
+            'makefile',
+            'mf',
+            'bsdmake',
+            'bbcode',
+            'groff',
+            'nroff',
+            'man',
+            'trac-wiki',
+            'moin',
+            'css+mozpreproc',
+            'mozhashpreproc',
+            'javascript+mozpreproc',
+            'mozpercentpreproc',
+            'xul+mozpreproc',
+            'rst',
+            'rest',
+            'restructuredtext',
+            'tex',
+            'latex',
+            'matlab',
+            'matlabsession',
+            'octave',
+            'scilab',
+            'ocaml',
+            'opa',
+            'sml',
+            'bugs',
+            'winbugs',
+            'openbugs',
+            'jags',
+            'modelica',
+            'stan',
+            'nimrod',
+            'nim',
+            'nit',
+            'nixos',
+            'nix',
+            'logos',
+            'objective-c',
+            'objectivec',
+            'obj-c',
+            'objc',
+            'objective-c++',
+            'objectivec++',
+            'obj-c++',
+            'objc++',
+            'swift',
+            'ooc',
+            'antlr-as',
+            'antlr-actionscript',
+            'antlr-csharp',
+            'antlr-c#',
+            'antlr-cpp',
+            'antlr-java',
+            'antlr',
+            'antlr-objc',
+            'antlr-perl',
+            'antlr-python',
+            'antlr-ruby',
+            'antlr-rb',
+            'ebnf',
+            'ragel-c',
+            'ragel-cpp',
+            'ragel-d',
+            'ragel-em',
+            'ragel-java',
+            'ragel',
+            'ragel-objc',
+            'ragel-ruby',
+            'ragel-rb',
+            'treetop',
+            'ada',
+            'ada95',
+            'ada2005',
+            'delphi',
+            'pas',
+            'pascal',
+            'objectpascal',
+            'modula2',
+            'm2',
+            'pawn',
+            'sp',
+            'perl6',
+            'pl6',
+            'perl',
+            'pl',
+            'php',
+            'php3',
+            'php4',
+            'php5',
+            'zephir',
+            'logtalk',
+            'prolog',
+            'cython',
+            'pyx',
+            'pyrex',
+            'dg',
+            'numpy',
+            'python3',
+            'py3',
+            'py3tb',
+            'pycon',
+            'python',
+            'py',
+            'sage',
+            'pytb',
+            'rconsole',
+            'rout',
+            'rd',
+            'splus',
+            's',
+            'r',
+            'sparql',
+            'rebol',
+            'red',
+            'red/system',
+            'resource',
+            'resourcebundle',
+            'robotframework',
+            'fancy',
+            'fy',
+            'rbcon',
+            'irb',
+            'rb',
+            'ruby',
+            'duby',
+            'rust',
+            'applescript',
+            'chai',
+            'chaiscript',
+            'hybris',
+            'hy',
+            'lsl',
+            'lua',
+            'moocode',
+            'moo',
+            'moon',
+            'moonscript',
+            'rexx',
+            'arexx',
+            'bash',
+            'sh',
+            'ksh',
+            'shell',
+            'console',
+            'bat',
+            'batch',
+            'dosbatch',
+            'winbatch',
+            'powershell',
+            'posh',
+            'ps1',
+            'psm1',
+            'shell-session',
+            'tcsh',
+            'csh',
+            'newspeak',
+            'smalltalk',
+            'squeak',
+            'st',
+            'snobol',
+            'raw',
+            'text',
+            'mysql',
+            'plpgsql',
+            'psql',
+            'postgresql-console',
+            'postgres-console',
+            'postgresql',
+            'postgres',
+            'rql',
+            'sql',
+            'sqlite3',
+            'tcl',
+            'html+cheetah',
+            'html+spitfire',
+            'htmlcheetah',
+            'js+cheetah',
+            'javascript+cheetah',
+            'js+spitfire',
+            'javascript+spitfire',
+            'cheetah',
+            'spitfire',
+            'xml+cheetah',
+            'xml+spitfire',
+            'cfc',
+            'cfm',
+            'cfs',
+            'css+django',
+            'css+jinja',
+            'css+erb',
+            'css+ruby',
+            'css+genshitext',
+            'css+genshi',
+            'css+php',
+            'css+smarty',
+            'django',
+            'jinja',
+            'erb',
+            'html+evoque',
+            'evoque',
+            'xml+evoque',
+            'genshi',
+            'kid',
+            'xml+genshi',
+            'xml+kid',
+            'genshitext',
+            'html+handlebars',
+            'handlebars',
+            'html+django',
+            'html+jinja',
+            'htmldjango',
+            'html+genshi',
+            'html+kid',
+            'html+php',
+            'html+smarty',
+            'js+django',
+            'javascript+django',
+            'js+jinja',
+            'javascript+jinja',
+            'js+erb',
+            'javascript+erb',
+            'js+ruby',
+            'javascript+ruby',
+            'js+genshitext',
+            'js+genshi',
+            'javascript+genshitext',
+            'javascript+genshi',
+            'js+php',
+            'javascript+php',
+            'js+smarty',
+            'javascript+smarty',
+            'jsp',
+            'css+lasso',
+            'html+lasso',
+            'js+lasso',
+            'javascript+lasso',
+            'xml+lasso',
+            'liquid',
+            'css+mako',
+            'html+mako',
+            'js+mako',
+            'javascript+mako',
+            'mako',
+            'xml+mako',
+            'mason',
+            'css+myghty',
+            'html+myghty',
+            'js+myghty',
+            'javascript+myghty',
+            'myghty',
+            'xml+myghty',
+            'rhtml',
+            'html+erb',
+            'html+ruby',
+            'smarty',
+            'ssp',
+            'tea',
+            'html+twig',
+            'twig',
+            'html+velocity',
+            'velocity',
+            'xml+velocity',
+            'xml+django',
+            'xml+jinja',
+            'xml+erb',
+            'xml+ruby',
+            'xml+php',
+            'xml+smarty',
+            'yaml+jinja',
+            'salt',
+            'sls',
+            'cucumber',
+            'gherkin',
+            'awk',
+            'gawk',
+            'mawk',
+            'nawk',
+            'vim',
+            'pot',
+            'po',
+            'http',
+            'irc',
+            'todotxt',
+            'coq',
+            'isabelle',
+            'lean',
+            'urbiscript',
+            'cirru',
+            'duel',
+            'jbst',
+            'jsonml+bst',
+            'qml',
+            'slim',
+            'xquery',
+            'xqy',
+            'xq',
+            'xql',
+            'xqm',
+        ],
+        'QuoteOrVerse': [
+            'quote',
+            'verse',
+        ],
+        'TableFormat': [
+            'psv',
+            'dsv',
+            'csv',
+        ],
+        'TableFrame': [
+            'all',
+            'topbot',
+            'sides',
+            'none',
+        ],
+        'TableGrid': [
+            'all',
+            'cols',
+            'rows',
+            'none',
+        ],
+        'TableAlign': [
+            'left',
+            'right',
+            'center',
+        ],
+        'TableFloat': [
+            'left',
+            'right',
+        ],
+        'TableHalign': [
+            'left',
+            'right',
+            'center',
+        ],
+        'TableValign': [
+            'top',
+            'bottom',
+            'middle',
+        ],
+        'TableOptions': [
+            'header',
+            'footer',
+        ],
+        'TableContentStyle': [
+            'AsciiDoc',
+            'Emphasis',
+            'Header',
+            'Literal',
+            'Monospaced',
+            'Default (None)',
+            'Strong',
+            'Verse',
+        ],
+        'URL_target': [
+            'blank',
+            'self',
+            'parent',
+            'top',
+        ],
+        'ImageFloat': [
+            'left',
+            'right',
+        ],
+        'ImageAlign': [
+            'text-left',
+            'text-center',
+            'text-right',
+        ],
+        'StemInterpreters': [
+            'stem',
+            'asciimath',
+            'latexmath',
+        ],
+        'CalloutCommentChars': [
+            '#',
+            '//',
+            ';;',
+            '<!--',
+            ' ',
+        ],
+        'AlignmentForTOC': [
+            'right',
+            'left',
+            'auto',
+            'preamble',
+            'macro',
+        ],
+    }.get(listtype, [])
+
+
+def remove_trailing_whitespace_for_inline_snippet():
+    (row, col) = vim.current.window.cursor
+    cmd = '%ds:\s\+$::' % (row - 1, )
+    try:
+        vim.command(cmd)
+    except:
+        pass
+endglobal
+
+##############################################################################
+# TODO:
+# * Organise according to Asciidoctor syntax document (ordering and numbering)
+##############################################################################
+
+snippet Admonition "Admonition Block" b
+.${1:title_for_Admonition_Block}
+[$2`!p \
+    snip.rv = complete(
+        t[2],
+        get_options_for_completion('Admonition')
+    )
+`]
+====
+$3
+====
+
+$0
+endsnippet
+
+snippet Comment "Comment Block" b
+////
+$1
+////
+
+$0
+endsnippet
+
+snippet Example "Example Block" b
+.${1:title_for_Example_Block}
+[example]
+====
+$2
+====
+
+$0
+endsnippet
+
+snippet Fenced "Fenced Block" b
+.${1:title_for_Fenced_Block}
+\`\`\`
+$2
+\`\`\`
+
+$0
+endsnippet
+
+snippet Listing "Listing Block" b
+.${1:title_for_Listing_Block}
+[listing]
+----
+$3
+----
+
+$0
+endsnippet
+
+snippet Literal "Literal Block" b
+.${1:title_for_Literal_Block}
+[literal]
+....
+$2
+....
+
+$0
+endsnippet
+
+# snippet Open "Open Block" b
+# .${1:title_for_Open_Block}
+# [# selection goes here #]
+# --
+# $2
+# --
+#
+# $0
+# endsnippet
+
+snippet Passthrough "Passthrough Block" b
+.${1:title_for_Passthrough_Block}
+[pass]
+++++
+$2
+++++
+
+$0
+endsnippet
+
+snippet Quote_or_Verse "Quote/Verse Block" b
+.${1:title_for_Quote_or_Verse_Block}
+[$2`!p \
+    snip.rv = complete(
+        t[2],
+        get_options_for_completion('QuoteOrVerse')
+    )
+`, ${3:attribution}, ${4:citation title and information}]
+____
+$5
+____
+
+$0
+endsnippet
+
+snippet Sidebar "Sidebar Block" b
+.${1:title_for_Sidebar_Block}
+[sidebar]
+****
+$2
+****
+
+$0
+endsnippet
+
+snippet Source "Source Block" b
+.${1:title_for_Source_Block}
+[source${2:%nowrap}, $3`!p \
+    snip.rv = complete(
+        t[3],
+        get_options_for_completion('SourceLanguage')
+    )
+`${4:, indent=0}]
+----
+$5
+----
+
+$0
+endsnippet
+
+snippet Stem "Stem Block" b
+.${1:title_for_Stem_Block}
+[$2`!p
+snip.rv = complete(
+    t[2],
+    get_options_for_completion('StemInterpreters')
+)
+`]
+++++
+$3
+++++
+
+$0
+endsnippet
+
+snippet StemInline "Stem Inline" i
+
+`!p
+remove_trailing_whitespace_for_inline_snippet()
+`$1`!p
+snip.rv = complete(
+    t[1],
+    get_options_for_completion('StemInterpreters')
+)
+`:[$2]
+$0
+endsnippet
+
+snippet KeyboardShortcutInline "Keyboard Shortcut Inline" i
+
+`!p
+remove_trailing_whitespace_for_inline_snippet()
+`kbd:[$1${2: + $3${4: + $5${6: + $7${8: + $9${10: + $11${12: + $13}}}}}}]
+$0
+endsnippet
+
+snippet MenuSelectionsInline "Menu Selections Inline" i
+
+`!p
+remove_trailing_whitespace_for_inline_snippet()
+`menu:$1[$2${3: > $4${5: > $6${7: > $8${9: > $10${11: > $12${13: > $14}}}}}}]
+$0
+endsnippet
+
+snippet ButtonInline "UI Button Inline" i
+
+`!p
+remove_trailing_whitespace_for_inline_snippet()
+`btn:[$1]
+$0
+endsnippet
+
+snippet CalloutInline "Callout Inline" i
+$1`!p
+snip.rv = complete(
+    t[1],
+    get_options_for_completion('CalloutCommentChars')
+)
+``!p
+snip.rv = ''
+if t[1]:
+    if not t[1].startswith('<'):
+        if not t[1].startswith(' '):
+            snip.rv += ' '
+        snip.rv += '<'
+`${3:callout number}`!p
+if not t[1]:
+    snip.rv = ''
+else:
+    if t[1].startswith('<'):
+        snip.rv = '-->'
+    else:
+        snip.rv = '>'
+`
+$0<$3> ${4:callout text - once done, hit backspace to remove indents and manually move this line below afterwards!}
+endsnippet
+
+snippet Lead "Lead Paragraph" b
+[.lead]
+$0
+endsnippet
+
+snippet Double_Quotation_Curved "Curved Double Quotation Marks" i
+"\`$1\`"$0
+endsnippet
+
+snippet Single_Quotation_Curved "Curved Single Quotation Marks" i
+'\`$1\`'$0
+endsnippet
+
+snippet Left_Single_Quotation "Left Curved Single Quotation Mark" i
+\{lsquo}$0
+endsnippet
+
+snippet Right_Single_Quotation "Right Curved Single Quotation Mark" i
+$1\`'$0
+endsnippet
+
+snippet Code_Inline "Code Inline" i
+\`$1\`$0
+endsnippet
+
+snippet Bold "Bold" i
+*$1*$0
+endsnippet
+
+snippet Italic "Italic" i
+_$1_$0
+endsnippet
+
+snippet BothBoldAndItalicTogether "Bold & Italic" i
+*_$1_*$0
+endsnippet
+
+snippet StrikethroughOrLinethrough "Strikethrough AKA Linethrough" i
+[line-through]#$1#$0
+endsnippet
+
+snippet Bulleted_Unordered_List "Bulleted (Unordered) List" b
+.${1:title_for_Bulleted_Unordered_List}
+
+* $2
+
+* $3
+
+* $4
+
+* $5
+
+* $6
+
+$0
+
+//^
+endsnippet
+
+snippet Numbered_Ordered_List "Numbered (Ordered) List" b
+.${1:title_for_Numbered_Ordered_List}
+
+[start=${2:1}]
+
+. $3
+
+. $4
+
+. $5
+
+. $6
+
+. $7
+
+$0
+
+//^
+endsnippet
+
+snippet Table "Table Block" b
+.${1:title_for_Table_Block}
+[format="$2`!p \
+    snip.rv = complete(
+        t[2],
+        get_options_for_completion('TableFormat')
+    )
+`", separator="${3:`!p \
+    snip.rv = separator_for_format(
+        t[2],
+    )
+`}", frame="$4`!p \
+    snip.rv = complete(
+        t[4],
+        get_options_for_completion('TableFrame')
+    )
+`", grid="$5`!p \
+    snip.rv = complete(
+        t[5],
+        get_options_for_completion('TableGrid')
+    )
+`", float="$7`!p \
+    snip.rv = complete(
+        t[7],
+        get_options_for_completion('TableFloat')
+    )
+`"${10:, options="header${11:, footer}"}`!p \
+    snip.rv += ''
+`, cols="<.<20$16`!p \
+    snip.rv = complete(
+        t[16],
+        get_options_for_completion('TableContentStyle')
+    )
+`,<.<20$20`!p \
+    snip.rv = complete(
+        t[20],
+        get_options_for_completion('TableContentStyle')
+    )
+`,<.<20$24`!p \
+    snip.rv = complete(
+        t[24],
+        get_options_for_completion('TableContentStyle')
+    )
+`,<.<20$28`!p \
+    snip.rv = complete(
+        t[28],
+        get_options_for_completion('TableContentStyle')
+    )
+`,<.<20$32`!p \
+    snip.rv = complete(
+        t[32],
+        get_options_for_completion('TableContentStyle')
+    )
+`", width="${33:100}"`!p \
+    snip.rv += ''
+`]
+$3===
+`!p \
+    snip.rv = default_alignment_for_table_row(
+        t[3],
+        '^.^'
+    )
+``!p \
+    snip.rv = separator_for_first_col_of_table_row(
+        t[3],
+    )
+`${102:Heading 1}
+`!p \
+    snip.rv = default_alignment_for_table_row(
+        t[3],
+        '^.^'
+    )
+`$3${103:Heading 2}
+`!p \
+    snip.rv = default_alignment_for_table_row(
+        t[3],
+        '^.^'
+    )
+`$3${104:Heading 3}
+`!p \
+    snip.rv = default_alignment_for_table_row(
+        t[3],
+        '^.^'
+    )
+`$3${105:Heading 4}
+`!p \
+    snip.rv = default_alignment_for_table_row(
+        t[3],
+        '^.^'
+    )
+`$3${106:Heading 5}
+
+`!p \
+    snip.rv = separator_for_first_col_of_table_row(
+        t[3],
+    )
+`$107
+$3$108
+$3$109
+$3$110
+$3$111
+
+`!p \
+    snip.rv = separator_for_first_col_of_table_row(
+        t[3],
+    )
+`$112
+$3$113
+$3$114
+$3$115
+$3$116
+
+`!p \
+    snip.rv = separator_for_first_col_of_table_row(
+        t[3],
+    )
+`$117
+$3$118
+$3$119
+$3$120
+$3$121
+
+`!p \
+    snip.rv = separator_for_first_col_of_table_row(
+        t[3],
+    )
+`$122
+$3$123
+$3$124
+$3$125
+$3$126
+
+`!p \
+    snip.rv = separator_for_first_col_of_table_row(
+        t[3],
+    )
+`$127
+$3$128
+$3$129
+$3$130
+$3$131
+$0
+`!p \
+    snip.rv = separator_for_first_col_of_table_row(
+        t[3],
+    )
+`
+$3
+$3
+$3
+$3
+$3===
+
+endsnippet
+
+snippet Horizontal_Rule "Horizontal Rule" b
+'''
+
+$0
+endsnippet
+
+snippet Page_Break "Page Break" b
+<<<
+
+$0
+endsnippet
+
+snippet Link_URL "Link URL" b
+:${1:Unique-link-id}: ${2:URL}#${4:section-title or xref-text}
+link:{$1}["${5:display text for link}", window="_$6`!p \
+    snip.rv = complete(
+        t[6],
+        get_options_for_completion('URL_target')
+    )
+`"${7:, role="${8:optional link colour}"}]
+
+$0
+endsnippet
+
+snippet AnchorAndXref "Anchor and Xref" b
+anchor:${1:Unique-anchor-id}[${2:default display text for anchor}]
+`!p
+calling_doc = vim.eval("@%")
+calling_doc_basename = os.path.basename(calling_doc)
+`// xref:`!p
+snip.rv = calling_doc_basename
+`#$1[$2]
+
+$0
+endsnippet
+
+snippet XrefToInternalDoc "Xref to internal document" i
+
+`!p
+remove_trailing_whitespace_for_inline_snippet()
+`xref:${1:Internal document}#${3:section-title or xref-text}[${4:display text for xref}]
+$0
+endsnippet
+
+snippet GetPythonVersion "Get Python version used by current Vim" b
+`!p
+snip.rv = sys.version_info
+`
+$0
+endsnippet
+
+# vim:ft=snippets:
